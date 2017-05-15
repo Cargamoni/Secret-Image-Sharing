@@ -20,7 +20,6 @@ namespace secretImageShare
         private void Form1_Load(object sender, EventArgs e)
         {
             this.Text = "Gizli Resim Paylaşma";
-            label1.Text = "Kodlama";
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -64,11 +63,14 @@ namespace secretImageShare
 
             if (saveFile.ShowDialog() == DialogResult.OK)
             {
-                textBoxDizin.Text = saveFile.FileName.ToString();
-                pictureBox1.ImageLocation = textBoxDizin.Text;
-
-                img.Save(textBoxDizin.Text);
+                textBox2.Text = saveFile.FileName.ToString();
+                pictureBox2.ImageLocation = textBox2.Text;
+                img.Save(textBox2.Text);
             }
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
         }
     }
 }
