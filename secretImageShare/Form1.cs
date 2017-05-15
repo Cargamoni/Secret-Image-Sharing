@@ -95,22 +95,53 @@ namespace secretImageShare
             Color gizliResimRenk = new Color();
 
             byte[] gizliBit;
+            byte[] asBitler;
             byte[] kirmiziBit;
             byte[] yesilBit;
             byte[] maviBit;
 
-            byte yeniGizliBit = 0;
+            byte yeniAsBit = 0;
             byte yeniKirmiziBit = 0;
             byte yeniYesilBit = 0;
             byte yeniMaviBit = 0;
 
-            for(int i = 0; i <= orten.Height -1; i++)
+            for(int i = 0; i <= orten.Width -1; i++)
             {
-                for(int j = 0; j <= orten.Width -1; j++)
+                for(int j = 0; j <= orten.Height -1; j++)
                 {
-                    ortenResimRenk = orten.GetPixel(i, j);        
+                    ortenResimRenk = orten.GetPixel(i, j);
+                    gizliBit = resimBiti((byte)gizliResimRenk.R);
+
+                    ortenResimRenk = orten.GetPixel(i, j);
+                    asBitler = resimBiti((byte)ortenResimRenk.A);
+                    kirmiziBit = resimBiti((byte)ortenResimRenk.R);
+                    yesilBit = resimBiti((byte)ortenResimRenk.G);
+                    maviBit = resimBiti((byte)ortenResimRenk.B);
+
+                    asBitler[6] = gizliBit[0];
+                    asBitler[7] = gizliBit[1];
+
+                    kirmiziBit[6] = gizliBit[2];
+                    kirmiziBit[7] = gizliBit[3];
+
+                    yesilBit[6] = gizliBit[4];
+                    yesilBit[7] = gizliBit[5];
+
+                    maviBit[6] = gizliBit[6];
+                    maviBit[7] = gizliBit[7];
+
+                    yeniAsBit = resimByte(asBitler);
+                    yeniKirmiziBit = resimByte(kirmiziBit);
+                    yeniYesilBit = resimByte(yesilBit);
+                    yeniMaviBit = resimByte(maviBit);
+
+                    //Console.WriteLine("As Bit = " + ortenResimRenk.A + " Kırmızı Bit = " + ortenResimRenk.R + " Yeşil Bit = " + ortenResimRenk.G + " Mavi Bit = " + ortenResimRenk.B + "\n");
+                    ortenResimRenk = Color.FromArgb(yeniAsBit, yeniKirmiziBit, yeniYesilBit, yeniMaviBit);
+                    orten.SetPixel(i, j, ortenResimRenk);
+                    //Console.WriteLine("Güncellenen : As Bit = " + ortenResimRenk.A + " Kırmızı Bit = " + ortenResimRenk.R + " Yeşil Bit = " + ortenResimRenk.G + " Mavi Bit = " + ortenResimRenk.B + "\n");
                 }
             }
+            pictureBox3.Image = orten;
         }
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
