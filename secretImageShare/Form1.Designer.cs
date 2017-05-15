@@ -63,7 +63,7 @@
             this.buttonEncode.Name = "buttonEncode";
             this.buttonEncode.Size = new System.Drawing.Size(84, 23);
             this.buttonEncode.TabIndex = 2;
-            this.buttonEncode.Text = "Şifrele";
+            this.buttonEncode.Text = "Gri  Yapma";
             this.buttonEncode.UseVisualStyleBackColor = true;
             this.buttonEncode.Click += new System.EventHandler(this.buttonEncode_Click);
             // 

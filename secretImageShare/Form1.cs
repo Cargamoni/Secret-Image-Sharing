@@ -28,7 +28,7 @@ namespace secretImageShare
             //File Dialog classının değişkene aktarılması.
             OpenFileDialog openDialog = new OpenFileDialog();
             openDialog.Filter = "Image Files (*.png, *.jpg, *.bmp) | *.png; *.jpg; *.bmp";    //Filter ile seçilebilecek tipteki resimler seçiliyor.
-            openDialog.InitialDirectory = @"D:\Git Repositories\Secret-Image-Sharing";        //İlk Açılacak Dosya Dizini
+            openDialog.InitialDirectory = @"D:\Git Repositories\Secret-Image-Sharing\";        //İlk Açılacak Dosya Dizini
 
             if (openDialog.ShowDialog() == DialogResult.OK)
             {
@@ -41,6 +41,34 @@ namespace secretImageShare
         {
             //Seçilen Resmin Bitmap olarak ayarlanması
             Bitmap img = new Bitmap(textBoxDizin.Text);
+
+            for(int i = 0; i <= img.Width -1; i++)
+            {
+                for(int j = 0; j<= img.Height -1; j++)
+                {
+                    Color pixel = img.GetPixel(i, j);
+                    if(i < 1 && j < 10)
+                    {
+                        Console.Write("R = [" + i + "][" + j + "] = " + pixel.R);
+                        Console.Write(" G = [" + i + "][" + j + "] = " + pixel.G);
+                        Console.Write(" B = [" + i + "][" + j + "] = " + pixel.B + "\n");
+                    }
+                    img.SetPixel(i, j, Color.FromArgb((pixel.R + pixel.G + pixel.B) / 3,(pixel.R + pixel.G + pixel.B) / 3,(pixel.R + pixel.G + pixel.B) / 3));
+                }
+            }
+
+            //Gri tonlamalı resmin kaydedilmesi
+            SaveFileDialog saveFile = new SaveFileDialog();
+            saveFile.Filter = "Image Files (*.png, *.jpg) | *.png; *.jpg";
+            saveFile.InitialDirectory = @"D:\Git Repositories\Secret-Image-Sharing\";
+
+            if (saveFile.ShowDialog() == DialogResult.OK)
+            {
+                textBoxDizin.Text = saveFile.FileName.ToString();
+                pictureBox1.ImageLocation = textBoxDizin.Text;
+
+                img.Save(textBoxDizin.Text);
+            }
         }
     }
 }
