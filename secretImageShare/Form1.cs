@@ -52,6 +52,7 @@ namespace secretImageShare
                         Console.Write(" G = [" + i + "][" + j + "] = " + pixel.G);
                         Console.Write(" B = [" + i + "][" + j + "] = " + pixel.B + "\n");
                     }
+                    //Bir resmin RGB değerlerinin toplamı 3e bölümü gri olur
                     img.SetPixel(i, j, Color.FromArgb((pixel.R + pixel.G + pixel.B) / 3,(pixel.R + pixel.G + pixel.B) / 3,(pixel.R + pixel.G + pixel.B) / 3));
                 }
             }
