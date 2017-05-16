@@ -80,8 +80,9 @@ namespace secretImageShare
 
         private void button3_Click(object sender, EventArgs e)
         {
-            Bitmap orten = new Bitmap(textBoxDizin.Text);
-            Bitmap gizli = new Bitmap(textBox2.Text);
+            Bitmap orten = new Bitmap(pictureBox1.Image);
+            Bitmap gizli = new Bitmap(pictureBox2.Image);
+
             for (int i = 0; i <= gizli.Width - 1; i++)
                 for (int j = 0; j <= gizli.Height - 1; j++)
                 {
@@ -105,11 +106,11 @@ namespace secretImageShare
             byte yeniYesilBit = 0;
             byte yeniMaviBit = 0;
 
-            for(int i = 0; i <= orten.Width -1; i++)
+            for (int i = 0; i <= orten.Width - 1; i++)
             {
-                for(int j = 0; j <= orten.Height -1; j++)
+                for (int j = 0; j <= orten.Height - 1; j++)
                 {
-                    ortenResimRenk = orten.GetPixel(i, j);
+                    gizliResimRenk = gizli.GetPixel(i, j);
                     gizliBit = resimBiti((byte)gizliResimRenk.R);
 
                     ortenResimRenk = orten.GetPixel(i, j);
@@ -142,19 +143,90 @@ namespace secretImageShare
                 }
             }
             pictureBox3.Image = orten;
+
+            SaveFileDialog openDialog = new SaveFileDialog();
+            openDialog.Filter = "Bitmap Image (.bmp)|*.bmp|Gif Image (.gif)|*.gif |JPEG Image (.jpeg)|*.jpeg |Png Image (.png)|*.png ";    //Filter ile seçilebilecek tipteki resimler seçiliyor.
+            openDialog.InitialDirectory = @"D:\Git Repositories\Secret-Image-Sharing\";        //İlk Açılacak Dosya Dizini
+            if (openDialog.ShowDialog() == DialogResult.OK)
+            {
+                pictureBox3.Image.Save(openDialog.FileName);
+            }
         }
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
-            if(checkBox1.Checked)
-            { 
+            if (checkBox1.Checked)
+            {
                 label1.Enabled = false;
-                comboBox1.Enabled = false;                
+                comboBox1.Enabled = false;
             }
             else
             {
                 label1.Enabled = true;
                 comboBox1.Enabled = true;
+            }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openDialog = new OpenFileDialog();
+            openDialog.Filter = "Bitmap Image (.bmp)|*.bmp|Gif Image (.gif)|*.gif |JPEG Image (.jpeg)|*.jpeg |Png Image (.png)|*.png ";    //Filter ile seçilebilecek tipteki resimler seçiliyor.
+            openDialog.InitialDirectory = @"D:\Git Repositories\Secret-Image-Sharing\";        //İlk Açılacak Dosya Dizini
+
+            if (openDialog.ShowDialog() == DialogResult.OK)
+            {
+                textBox1.Text = openDialog.FileName.ToString();         //Seçilen dosyanın dizininin textbox içerisine aktarılması
+                pictureBox4.ImageLocation = textBox1.Text;              //PictureBox üzerinde seçilen resmin gösterilmesi.
+            }
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            Bitmap sifrelenmisResim = (Bitmap)pictureBox4.Image;
+            Bitmap desifrelenmisResim = new Bitmap(sifrelenmisResim.Width, sifrelenmisResim.Height);
+
+            Color desifrelemePixelRengi = new Color();
+
+            byte[] desifrelemeBitleri = new byte[8];
+            byte[] asBitler;
+            byte[] kirmiziBit;
+            byte[] yesilBit;
+            byte[] maviBit;
+
+            byte yeniGri = 0;
+            for (int i = 0; i <= sifrelenmisResim.Width - 1; i++)
+            {
+                for (int j = 0; j <= sifrelenmisResim.Height - 1; j++)
+                {
+                    desifrelemePixelRengi = sifrelenmisResim.GetPixel(i, j);
+
+                    asBitler = resimBiti((byte)desifrelemePixelRengi.A);
+                    kirmiziBit = resimBiti((byte)desifrelemePixelRengi.R);
+                    yesilBit = resimBiti((byte)desifrelemePixelRengi.G);
+                    maviBit = resimBiti((byte)desifrelemePixelRengi.B);
+
+                    desifrelemeBitleri[0] = asBitler[6];
+                    desifrelemeBitleri[1] = asBitler[7];
+                    desifrelemeBitleri[2] = kirmiziBit[6];
+                    desifrelemeBitleri[3] = kirmiziBit[7];
+                    desifrelemeBitleri[4] = yesilBit[6];
+                    desifrelemeBitleri[5] = yesilBit[7];
+                    desifrelemeBitleri[6] = maviBit[6];
+                    desifrelemeBitleri[7] = maviBit[7];
+
+                    yeniGri = resimByte(desifrelemeBitleri);
+
+                    desifrelemePixelRengi = Color.FromArgb(yeniGri, yeniGri, yeniGri);
+                    desifrelenmisResim.SetPixel(i, j, desifrelemePixelRengi);
+                }
+            }
+            pictureBox4.Image = desifrelenmisResim;
+            SaveFileDialog saveDialog = new SaveFileDialog();
+            saveDialog.Filter = "Bitmap Image (.bmp)|*.bmp|Gif Image (.gif)|*.gif |JPEG Image (.jpeg)|*.jpeg |Png Image (.png)|*.png ";    //Filter ile seçilebilecek tipteki resimler seçiliyor.
+            saveDialog.InitialDirectory = @"D:\Git Repositories\Secret-Image-Sharing\";        //İlk Açılacak Dosya Dizini
+            if (saveDialog.ShowDialog() == DialogResult.OK)
+            {
+                pictureBox4.Image.Save(saveDialog.FileName);
             }
         }
     }
