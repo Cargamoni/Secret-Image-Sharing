@@ -18,7 +18,6 @@ namespace secretImageShare
         {
             InitializeComponent();
         }
-
         private void Form1_Load(object sender, EventArgs e)
         {
             this.Text = "Gizli Resim Paylaşma";
@@ -33,7 +32,7 @@ namespace secretImageShare
         private void button1_Click(object sender, EventArgs e)
         {
             OpenFileDialog openDialog = new OpenFileDialog();
-            openDialog.Filter = "Image Files (*.png, *.jpg, *.bmp) | *.png; *.jpg; *.bmp";    //Filter ile seçilebilecek tipteki resimler seçiliyor.
+            openDialog.Filter = "Bitmap Image (.bmp)|*.bmp|Gif Image (.gif)|*.gif |JPEG Image (.jpeg)|*.jpeg |Png Image (.png)|*.png ";    //Filter ile seçilebilecek tipteki resimler seçiliyor.
             openDialog.InitialDirectory = @"D:\Git Repositories\Secret-Image-Sharing\";        //İlk Açılacak Dosya Dizini
 
             if (openDialog.ShowDialog() == DialogResult.OK)
@@ -46,7 +45,7 @@ namespace secretImageShare
         private void buttonEncode_Click(object sender, EventArgs e)
         {
             OpenFileDialog openDialog = new OpenFileDialog();
-            openDialog.Filter = "Image Files (*.png, *.jpg, *.bmp) | *.png; *.jpg; *.bmp";    //Filter ile seçilebilecek tipteki resimler seçiliyor.
+            openDialog.Filter = "Bitmap Image (.bmp)|*.bmp|Gif Image (.gif)|*.gif |JPEG Image (.jpeg)|*.jpeg |Png Image (.png)|*.png ";    //Filter ile seçilebilecek tipteki resimler seçiliyor.
             openDialog.InitialDirectory = @"D:\Git Repositories\Secret-Image-Sharing\";        //İlk Açılacak Dosya Dizini
 
             if (openDialog.ShowDialog() == DialogResult.OK)
@@ -56,41 +55,11 @@ namespace secretImageShare
             }
         }
 
-        public byte[] resimBiti(byte tekPixel)
-        {
-            int pixel = 0;
-            pixel = (int)tekPixel;
-            BitArray bitler = new BitArray(new byte[] { (byte)pixel });
-            bool[] boolDizi = new bool[bitler.Count];
-            bitler.CopyTo(boolDizi, 0);
-            byte[] bitDizisi = boolDizi.Select(bit => (byte)(bit ? 1 : 0)).ToArray();
-            Array.Reverse(bitDizisi);
-            return bitDizisi;
-        }
-
-        private byte resimByte(byte[] bitler)
-        {
-            String olusanBit = "";
-            for (int i = 0; i < 8; i++)
-                olusanBit += bitler[i];
-            byte yeniPixel = Convert.ToByte(olusanBit, 2);
-            int donusturulenPixel = (int)yeniPixel;
-            return (byte)donusturulenPixel;
-        }
-
         private void button3_Click(object sender, EventArgs e)
         {
+            secretShare degisken = new secretShare();
             Bitmap orten = new Bitmap(pictureBox1.Image);
-            Bitmap gizli = new Bitmap(pictureBox2.Image);
-
-            for (int i = 0; i <= gizli.Width - 1; i++)
-                for (int j = 0; j <= gizli.Height - 1; j++)
-                {
-                    Color pixel = gizli.GetPixel(i, j);
-                    //Bir resmin RGB değerlerinin toplamı 3e bölümü gri olur
-                    gizli.SetPixel(i, j, Color.FromArgb((pixel.R + pixel.G + pixel.B) / 3, (pixel.R + pixel.G + pixel.B) / 3, (pixel.R + pixel.G + pixel.B) / 3));
-                }
-
+            Bitmap gizli = degisken.geleniGriYap(pictureBox2.Image);
             pictureBox2.Image = gizli;
             Color ortenResimRenk = new Color();
             Color gizliResimRenk = new Color();
@@ -111,17 +80,17 @@ namespace secretImageShare
                 for (int j = 0; j <= orten.Height - 1; j++)
                 {
                     gizliResimRenk = gizli.GetPixel(i, j);
-                    gizliBit = resimBiti((byte)gizliResimRenk.R);
+                    gizliBit = degisken.resimBiti((byte)gizliResimRenk.R);
 
                     ortenResimRenk = orten.GetPixel(i, j);
-                    asBitler = resimBiti((byte)ortenResimRenk.A);
-                    kirmiziBit = resimBiti((byte)ortenResimRenk.R);
-                    yesilBit = resimBiti((byte)ortenResimRenk.G);
-                    maviBit = resimBiti((byte)ortenResimRenk.B);
+                    asBitler = degisken.resimBiti((byte)ortenResimRenk.A);
+                    kirmiziBit = degisken.resimBiti((byte)ortenResimRenk.R);
+                    yesilBit = degisken.resimBiti((byte)ortenResimRenk.G);
+                    maviBit = degisken.resimBiti((byte)ortenResimRenk.B);
 
                     asBitler[6] = gizliBit[0];
                     asBitler[7] = gizliBit[1];
-
+                
                     kirmiziBit[6] = gizliBit[2];
                     kirmiziBit[7] = gizliBit[3];
 
@@ -131,10 +100,10 @@ namespace secretImageShare
                     maviBit[6] = gizliBit[6];
                     maviBit[7] = gizliBit[7];
 
-                    yeniAsBit = resimByte(asBitler);
-                    yeniKirmiziBit = resimByte(kirmiziBit);
-                    yeniYesilBit = resimByte(yesilBit);
-                    yeniMaviBit = resimByte(maviBit);
+                    yeniAsBit = degisken.resimByte(asBitler);
+                    yeniKirmiziBit = degisken.resimByte(kirmiziBit);
+                    yeniYesilBit = degisken.resimByte(yesilBit);
+                    yeniMaviBit = degisken.resimByte(maviBit);
 
                     //Console.WriteLine("As Bit = " + ortenResimRenk.A + " Kırmızı Bit = " + ortenResimRenk.R + " Yeşil Bit = " + ortenResimRenk.G + " Mavi Bit = " + ortenResimRenk.B + "\n");
                     ortenResimRenk = Color.FromArgb(yeniAsBit, yeniKirmiziBit, yeniYesilBit, yeniMaviBit);
@@ -151,6 +120,10 @@ namespace secretImageShare
             {
                 pictureBox3.Image.Save(openDialog.FileName);
             }
+            System.GC.SuppressFinalize(degisken);
+            System.GC.SuppressFinalize(gizli);
+            System.GC.SuppressFinalize(orten);
+            System.GC.SuppressFinalize(openDialog);
         }
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
@@ -182,6 +155,7 @@ namespace secretImageShare
 
         private void button4_Click(object sender, EventArgs e)
         {
+            secretShare degisken = new secretShare();
             Bitmap sifrelenmisResim = (Bitmap)pictureBox4.Image;
             Bitmap desifrelenmisResim = new Bitmap(sifrelenmisResim.Width, sifrelenmisResim.Height);
 
@@ -200,10 +174,10 @@ namespace secretImageShare
                 {
                     desifrelemePixelRengi = sifrelenmisResim.GetPixel(i, j);
 
-                    asBitler = resimBiti((byte)desifrelemePixelRengi.A);
-                    kirmiziBit = resimBiti((byte)desifrelemePixelRengi.R);
-                    yesilBit = resimBiti((byte)desifrelemePixelRengi.G);
-                    maviBit = resimBiti((byte)desifrelemePixelRengi.B);
+                    asBitler = degisken.resimBiti((byte)desifrelemePixelRengi.A);
+                    kirmiziBit = degisken.resimBiti((byte)desifrelemePixelRengi.R);
+                    yesilBit = degisken.resimBiti((byte)desifrelemePixelRengi.G);
+                    maviBit = degisken.resimBiti((byte)desifrelemePixelRengi.B);
 
                     desifrelemeBitleri[0] = asBitler[6];
                     desifrelemeBitleri[1] = asBitler[7];
@@ -214,7 +188,7 @@ namespace secretImageShare
                     desifrelemeBitleri[6] = maviBit[6];
                     desifrelemeBitleri[7] = maviBit[7];
 
-                    yeniGri = resimByte(desifrelemeBitleri);
+                    yeniGri = degisken.resimByte(desifrelemeBitleri);
 
                     desifrelemePixelRengi = Color.FromArgb(yeniGri, yeniGri, yeniGri);
                     desifrelenmisResim.SetPixel(i, j, desifrelemePixelRengi);
@@ -228,6 +202,10 @@ namespace secretImageShare
             {
                 pictureBox4.Image.Save(saveDialog.FileName);
             }
+            System.GC.SuppressFinalize(degisken);
+            System.GC.SuppressFinalize(sifrelenmisResim);
+            System.GC.SuppressFinalize(desifrelenmisResim);
+            System.GC.SuppressFinalize(saveDialog);
         }
     }
 }
