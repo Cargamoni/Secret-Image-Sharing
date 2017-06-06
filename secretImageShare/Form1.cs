@@ -61,57 +61,8 @@ namespace secretImageShare
             Bitmap orten = new Bitmap(pictureBox1.Image);
             Bitmap gizli = degisken.geleniGriYap(pictureBox2.Image);
             pictureBox2.Image = gizli;
-            Color ortenResimRenk = new Color();
-            Color gizliResimRenk = new Color();
-
-            byte[] gizliBit;
-            byte[] asBitler;
-            byte[] kirmiziBit;
-            byte[] yesilBit;
-            byte[] maviBit;
-
-            byte yeniAsBit = 0;
-            byte yeniKirmiziBit = 0;
-            byte yeniYesilBit = 0;
-            byte yeniMaviBit = 0;
-
-            for (int i = 0; i <= orten.Width - 1; i++)
-            {
-                for (int j = 0; j <= orten.Height - 1; j++)
-                {
-                    gizliResimRenk = gizli.GetPixel(i, j);
-                    gizliBit = degisken.resimBiti((byte)gizliResimRenk.R);
-
-                    ortenResimRenk = orten.GetPixel(i, j);
-                    asBitler = degisken.resimBiti((byte)ortenResimRenk.A);
-                    kirmiziBit = degisken.resimBiti((byte)ortenResimRenk.R);
-                    yesilBit = degisken.resimBiti((byte)ortenResimRenk.G);
-                    maviBit = degisken.resimBiti((byte)ortenResimRenk.B);
-
-                    asBitler[6] = gizliBit[0];
-                    asBitler[7] = gizliBit[1];
-                
-                    kirmiziBit[6] = gizliBit[2];
-                    kirmiziBit[7] = gizliBit[3];
-
-                    yesilBit[6] = gizliBit[4];
-                    yesilBit[7] = gizliBit[5];
-
-                    maviBit[6] = gizliBit[6];
-                    maviBit[7] = gizliBit[7];
-
-                    yeniAsBit = degisken.resimByte(asBitler);
-                    yeniKirmiziBit = degisken.resimByte(kirmiziBit);
-                    yeniYesilBit = degisken.resimByte(yesilBit);
-                    yeniMaviBit = degisken.resimByte(maviBit);
-
-                    //Console.WriteLine("As Bit = " + ortenResimRenk.A + " Kırmızı Bit = " + ortenResimRenk.R + " Yeşil Bit = " + ortenResimRenk.G + " Mavi Bit = " + ortenResimRenk.B + "\n");
-                    ortenResimRenk = Color.FromArgb(yeniAsBit, yeniKirmiziBit, yeniYesilBit, yeniMaviBit);
-                    orten.SetPixel(i, j, ortenResimRenk);
-                    //Console.WriteLine("Güncellenen : As Bit = " + ortenResimRenk.A + " Kırmızı Bit = " + ortenResimRenk.R + " Yeşil Bit = " + ortenResimRenk.G + " Mavi Bit = " + ortenResimRenk.B + "\n");
-                }
-            }
-            pictureBox3.Image = orten;
+            
+            pictureBox3.Image = degisken.encodeImage(orten, gizli);
 
             SaveFileDialog openDialog = new SaveFileDialog();
             openDialog.Filter = "Bitmap Image (.bmp)|*.bmp|Gif Image (.gif)|*.gif |JPEG Image (.jpeg)|*.jpeg |Png Image (.png)|*.png ";    //Filter ile seçilebilecek tipteki resimler seçiliyor.
