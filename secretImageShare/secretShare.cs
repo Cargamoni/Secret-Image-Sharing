@@ -55,8 +55,7 @@ namespace secretImageShare
             Color ortenResimRenk = new Color();
             Color gizliResimRenk = new Color();
             Form1 degisken = new Form1();
-            degisken.progressBar1.Visible = true;
-            degisken.progressBar1.Maximum = orten.Width * orten.Height;
+
             byte[] gizliBit;
             byte[] asBitler;
             byte[] kirmiziBit;
@@ -97,8 +96,7 @@ namespace secretImageShare
                     yeniKirmiziBit = this.resimByte(kirmiziBit);
                     yeniYesilBit = this.resimByte(yesilBit);
                     yeniMaviBit = this.resimByte(maviBit);
-
-                    degisken.progressBar1.Increment(1);
+                    degisken.progressBarIncrease(1);
                     //Console.WriteLine("As Bit = " + ortenResimRenk.A + " Kırmızı Bit = " + ortenResimRenk.R + " Yeşil Bit = " + ortenResimRenk.G + " Mavi Bit = " + ortenResimRenk.B + "\n");
                     ortenResimRenk = Color.FromArgb(yeniAsBit, yeniKirmiziBit, yeniYesilBit, yeniMaviBit);
                     orten.SetPixel(i, j, ortenResimRenk);
