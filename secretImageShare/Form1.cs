@@ -54,6 +54,10 @@ namespace secretImageShare
                 pictureBox2.ImageLocation = textBox2.Text;              //PictureBox üzerinde seçilen resmin gösterilmesi.
             }
         }
+        //EMD (Exploding Modification Direct
+        //Jpeg steganografi
+        //Des Aes
+        //
         public void progressBarIncrease(int size)
         {
             progressBar1.Increment(size);
